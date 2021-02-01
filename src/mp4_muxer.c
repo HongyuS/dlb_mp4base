@@ -1244,7 +1244,7 @@ write_frma_box(bbio_handle_t snk, track_handle_t track)
         if (IS_FOURCC_EQUAL(track->parser->dsi_FourCC, "avcC"))
             codingname = "dvav";
         else if (IS_FOURCC_EQUAL(track->parser->dsi_FourCC, "hvcC"))
-            codingname = "dvhe";    
+            codingname = "dvh1";    
     }
 
     sink_write_4CC(snk, codingname);
@@ -1546,7 +1546,7 @@ write_video_box(bbio_handle_t snk, track_handle_t track)
         {
             if(IS_FOURCC_EQUAL(codingname, "hev1"))
             {
-                codingname = "dvhe";
+                codingname = "dvh1";
             } 
             else if (IS_FOURCC_EQUAL(codingname, "hvc1"))
             {
@@ -4825,7 +4825,7 @@ build_stsd_entry(track_handle_t track, uint8_t **pbuf)
     *pbuf = snk->get_buffer(snk, &data_size, 0);
     snk->destroy(snk);
 
-    if (IS_FOURCC_EQUAL(track->codingname, "dvav") || IS_FOURCC_EQUAL(track->codingname, "dvhe"))
+    if (IS_FOURCC_EQUAL(track->codingname, "dvav") || IS_FOURCC_EQUAL(track->codingname, "dvh1"))
     {
         if (track->BL_track)
         {
@@ -6968,6 +6968,7 @@ mp4_muxer_add_track (mp4_ctrl_handle_t  hmuxer
         return 0;
     }
 
+    p_usr_cfg_es->sample_entry_name_flag = 1; // force "hvc1"
     codingname = get_codingname(hparser);
     if (!codingname)
     {
@@ -7034,8 +7035,8 @@ mp4_muxer_add_track (mp4_ctrl_handle_t  hmuxer
         }
         else if (IS_FOURCC_EQUAL(codingname,"hvc1") || IS_FOURCC_EQUAL(codingname,"hev1"))
         {
-            FOURCC_ASSIGN(track->codingname, "dvhe");
-            FOURCC_ASSIGN(hparser->dsi_name, "dvhe");
+            FOURCC_ASSIGN(track->codingname, "dvh1"); // force "dvh1"
+            FOURCC_ASSIGN(hparser->dsi_name, "dvh1");
         }
     }
 
